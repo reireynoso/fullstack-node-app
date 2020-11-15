@@ -88,3 +88,9 @@ app.use('/', require('./routes/index')) // anything that's just slash, link to t
 # Passport
 - Using the `passport-google-oauth20`
 - Under `config`, create a `passport.js` file which will handle the strategy
+
+# Lockdown routes
+- Create a middleware directory and create a middleware file that detects if a user is logged in or not
+
+# Store Session
+- In app.js, require connect-mongo but passsing in the session. along with mongoose. Adjust the session middleware to include store
