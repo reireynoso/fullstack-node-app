@@ -27,8 +27,15 @@ if(process.env.NODE_ENV === "development"){ // only want to run in dev mode
     app.use(morgan('dev')) // when there's a request to the page of any kind, is shows down in the console
 }
 
+// handlebards helpers
+const {formatDate, stripTags, truncate} = require('./helpers/hbs')
+
 // handlebars
-app.engine('.hbs', exphbs({defaultLayout:'main',extname: '.hbs'})); // setting up to replace using .handlebars extension to take in .hbs
+app.engine('.hbs', exphbs({helpers: {
+    formatDate,
+    stripTags,
+    truncate
+}, defaultLayout:'main',extname: '.hbs'})); // setting up to replace using .handlebars extension to take in .hbs
 app.set('view engine', '.hbs');
 
 // sessions

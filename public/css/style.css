@@ -6,3 +6,7 @@ p {
     margin-top: 50px;
     text-align: center;
 }
+
+body > div.container > div > div:nth-child(2) > div > div.card-content.center-align > p {
+    word-break: break-all;
+}

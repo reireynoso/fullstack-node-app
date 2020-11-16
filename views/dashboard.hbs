@@ -19,7 +19,7 @@
                         <a href="/stories/{{_id}}">{{title}}</a>
                     </td>
                     <td>
-                        {{createdAt}}
+                        {{formatDate createdAt 'MMMM Do YYYY, h:mm:ss a'}} <!-- space not needed. automatically passes createdAt as the parameter-->
                     </td>
                     <td>
                         <span class="dash-status">
