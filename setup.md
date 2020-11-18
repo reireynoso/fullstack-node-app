@@ -94,3 +94,75 @@ app.use('/', require('./routes/index')) // anything that's just slash, link to t
 
 # Store Session
 - In app.js, require connect-mongo but passsing in the session. along with mongoose. Adjust the session middleware to include store
+
+# Override PUT and DELETE
+- In App.js
+```js
+const methodOverride = require("method-override")
+
+app.use(methodOverride(function(req,res){
+    if(req.body && typeof req.body === 'object' && '_method' in req.body){
+        let method = req.body._method
+        delete req.body._method
+        return method
+    }
+}))
+
+// include in routes
+// @desc Show edit page 
+// @route GET /stories/edit/:id
+router.get('/edit/:id', ensureAuth , async(req,res) => {
+    const story = await Story.findOne({
+        _id: req.params.id
+    }).lean()
+
+    if(!story){
+        return res.render('error/404')
+    }
+
+    if(story.user != req.user.id){
+        res.redirect('/stories')
+    }else{
+        res.render('stories/edit', {
+            story
+        })
+    }
+ })
+
+  // @desc Update story
+// @route PUT /stories/:id
+router.put('/:id', ensureAuth ,async(req,res) => {
+    let story = await Story.findById(req.params.id).lean()
+
+    if(!story){
+        return res.render('error/404')
+    }
+
+    if(story.user != req.user.id){
+        res.redirect('/stories')
+    }else{
+        story = await Story.findOneAndUpdate({_id: req.params.id}, req.body, {
+            new: true,
+            runValidators: true
+        })
+
+        res.redirect('/dashboard')
+    }
+})
+
+router.delete('/:id', ensureAuth , async(req,res) => {
+    try {
+        await Story.remove({
+            _id: req.params.id
+        })
+
+        res.redirect('/dashboard')
+    } catch (error) {
+        console.log(error)
+        return res.render('error/500')
+    }
+})
+
+// include in HTML form
+<input type="hidden" name="_method" value="PUT">
+```
